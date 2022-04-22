@@ -1,7 +1,7 @@
 package com.spring.webApp.domain;
 
 import javax.persistence.*;
-import java.util.Objects;
+import java.util.*;
 
 @Entity
 public class Publisher {
@@ -14,6 +14,10 @@ public class Publisher {
     private String city;
     private String state;
     private String zip;
+
+    @OneToMany
+    @JoinColumn(name = "publisher_id")
+    private Set<Book> books = new HashSet<>();
 
 
     public Publisher() {
@@ -33,6 +37,14 @@ public class Publisher {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getAddressLine() {
@@ -67,17 +79,32 @@ public class Publisher {
         this.zip = zip;
     }
 
+    public Set<Book> getBooks() {
+        return books;
+    }
+
+    public void setBooks(Set<Book> books) {
+        this.books = books;
+    }
 
     @Override
     public String toString() {
+        String bookList = "";
+        for (Book book : books) {
+            String str = book.toString();
+            bookList = bookList.concat(str + "\n");
+        }
+
         return "Publisher{" +
                 "id=" + id +
                 ", addressLine='" + addressLine + '\'' +
                 ", city='" + city + '\'' +
                 ", state='" + state + '\'' +
                 ", zip=" + zip +
-                '}';
+                '}' + '\n'
+                + bookList;
     }
+
 
     @Override
     public boolean equals(Object o) {
